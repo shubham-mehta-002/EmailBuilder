@@ -198,7 +198,7 @@ const downloadTemplate = async (req, res) => {
             .replace('{{logoUrl}}', template.logoUrl || '')
             
             // Title section
-            .replace('{{titleContent}}', template.title.value)
+            .replace('{{titleText}}', template.title.value)
             .replace('{{titleColor}}', template.title.textColor)
             .replace('{{titleFontSize}}', getFontSize(template.title.fontSize))
             .replace('{{titleAlignment}}', template.title.alignment)
@@ -210,10 +210,12 @@ const downloadTemplate = async (req, res) => {
             .replace('{{contentAlignment}}', template.context.alignment)
             
             // Footer section
-            .replace('{{footerContent}}', template.footer.value)
+            .replace('{{footerText}}', template.footer.value)
             .replace('{{footerColor}}', template.footer.textColor)
             .replace('{{footerFontSize}}', getFontSize(template.footer.fontSize))
-            .replace('{{footerAlignment}}', template.footer.alignment);
+            .replace('{{footerAlignment}}', template.footer.alignment)
+
+            .replace('{{templateName}}', template.templateName);
 
         // Set response headers
         res.setHeader('Content-Type', 'text/html');

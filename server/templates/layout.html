@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{title}}</title>
-    <!-- <style>
+    <title>{{templateName}}</title>
+    <style>
       :root {
         --title-color: black;
         --content-color: black;
@@ -12,7 +12,6 @@
         --title-size: 24px;
         --content-size: 16px;
       }
-
       body {
         margin: 0;
         padding: 0;
@@ -21,7 +20,17 @@
         -ms-text-size-adjust: 100%;
         font-family: Arial, sans-serif;
       }
-
+      #titleText {
+        color: var(--title-color);
+        font-size: var(--title-size);
+        text-align: var(--title-alignment);
+      }
+      .logo-image {
+        width: 100%;
+        max-width: 100px;
+        height: auto;
+      }
+      
       img {
         border: 0;
         height: auto;
@@ -81,28 +90,36 @@
           padding: 10px !important;
         }
       }
-    </style> -->
+    </style>
   </head>
   <body
     style="
-    --title-color: {{styles.titleColor}};
-    --content-color: {{styles.contentColor}};
-    --text-align: {{styles.alignment}};
-    --title-size: {{styles.titleSize}};
-    --content-size: {{styles.contentSize}};
-    --logo-url: {{logoUrl}};
+    --title-color: {{titleColor}};
+    --content-color: {{contentColor}};
+    --footer-color: {{footerColor}};
+
+    --title-alignment: {{titleAlignment}};
+    --content-alignment: {{contentAlignment}};
+    --footer-alignment: {{footerAlignment}};
+
+    --title-size: {{titleFontSize}};
+    --content-size: {{contentFontSize}};
+    --footer-size: {{footerFontSize}};
 "
   >
     <div class="email-wrapper">
+      <div class="logo">
+        <img src="{{logoUrl}}" alt="Logo" class="logo-image" />
+      </div>
       <div class="header">
-        <h1>{{title}}</h1>
+        <h1 id="titleText">{{titleText}}</h1>
       </div>
 
       <div class="image-container">
         <img src="{{imageUrl}}" alt="Email Image" class="email-image" />
       </div>
-      <div class="content">{{content}}</div>
-      <div class="footer">{{footer}}</div>
+      <div class="content">{{contentText}}</div>
+      <div class="footer">{{footerText}}</div>
     </div>
   </body>
 </html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{title}}</title>
+    <!-- <style>
+      :root {
+        --title-color: black;
+        --content-color: black;
+        --text-align: left;
+        --title-size: 24px;
+        --content-size: 16px;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100% !important;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        font-family: Arial, sans-serif;
+      }
+
+      img {
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+        -ms-interpolation-mode: bicubic;
+      }
+
+      .email-wrapper {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+      }
+
+      .image-container {
+        margin: 20px 0;
+      }
+
+      .email-image {
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        display: block;
+      }
+
+      .header {
+        text-align: var(--text-align);
+        padding: 20px 0;
+      }
+
+      .header h1 {
+        color: var(--title-color);
+        font-size: var(--title-size);
+        margin: 0;
+      }
+
+      .content {
+        color: var(--content-color);
+        font-size: var(--content-size);
+        padding: 20px 0;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 20px 0;
+        color: #666;
+        font-size: 12px;
+        border-top: 1px solid #eee;
+      }
+
+      @media only screen and (max-width: 600px) {
+        .email-wrapper {
+          width: 100% !important;
+          padding: 10px !important;
+        }
+      }
+    </style> -->
+  </head>
+  <body
+    style="
+    --title-color: {{styles.titleColor}};
+    --content-color: {{styles.contentColor}};
+    --text-align: {{styles.alignment}};
+    --title-size: {{styles.titleSize}};
+    --content-size: {{styles.contentSize}};
+    --logo-url: {{logoUrl}};
+"
+  >
+    <div class="email-wrapper">
+      <div class="header">
+        <h1>{{title}}</h1>
+      </div>
+
+      <div class="image-container">
+        <img src="{{imageUrl}}" alt="Email Image" class="email-image" />
+      </div>
+      <div class="content">{{content}}</div>
+      <div class="footer">{{footer}}</div>
+    </div>
+  </body>
+</html>

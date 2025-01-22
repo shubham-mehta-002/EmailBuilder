@@ -9,7 +9,8 @@ import {
   Bars3Icon,
   Bars3BottomRightIcon,
   LinkIcon,
-  ChevronLeftIcon
+  ChevronLeftIcon,
+  PencilIcon
 } from '@heroicons/react/24/outline' 
 import { toast } from 'react-hot-toast'
 // import { uploadImage} from '../utils/cloudinary'
@@ -29,6 +30,7 @@ function EmailBuilder() {
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(null);
   const fileInputRef = useRef(null);
+  const [isEditingTemplateName, setIsEditingTemplateName] = useState(false);
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -283,7 +285,24 @@ function EmailBuilder() {
               </button>
             </div>
             
-            <h2 className="text-xl font-semibold mt-4">{template.templateName}</h2>
+            <h2 className="text-xl font-semibold mt-4 flex justify-center items-center">
+              {isEditingTemplateName ? (
+                <input
+                  type='text'
+                  value={template.templateName}
+                  onChange={(e) => setTemplate(prev => ({ ...prev, templateName: e.target.value }))}
+                  onBlur={() => setIsEditingTemplateName(false)}
+                  className="border-b border-gray-200"
+                />
+              ) : (
+                <>
+                  {template.templateName}
+                  <button onClick={() => setIsEditingTemplateName(true)}>
+                    <PencilIcon className="w-5 h-5 inline ml-2 cursor-pointer" />
+                  </button>
+                </>
+              )}
+            </h2>
 
             {/* Email Canvas */}
             <div className="bg-white mt-4 mx-auto max-w-3xl min-h-[600px] shadow-md p-8">
@@ -367,7 +386,7 @@ function EmailBuilder() {
 
       {/* Right Sidebar */}
       {template && activeSection && (
-        <div className="w-full md:w-80 border-t md:border-t-0 md:border-l border-gray-200 bg-white overflow-y-auto">
+        <div className=" h-[40%] w-full md:w-80 border-t md:border-t-0 md:border-l border-gray-200 bg-white overflow-y-auto">
           <div className="p-4">
             {/* Text Editor Section */}
             <div className="space-y-4">

@@ -124,7 +124,7 @@ function EmailBuilder() {
         break;
       case 'link':
         if (linkUrl) {
-          newHtml = `${prefix}<a href="${linkUrl}">${content}</a>${suffix}`;
+          newHtml = `${prefix}<a href="${linkUrl}" target="__blank">${content}</a>${suffix}`;
           setShowLinkInput(false);
           setLinkUrl('');
         } else {
@@ -216,11 +216,12 @@ function EmailBuilder() {
   // Handle save template
   const handleSaveTemplate = async (e) => {
     e.preventDefault();
+    console.log({template});
     console.log('Saving template...');
     
     try {
       // Send the entire template object to backend
-      const response = await axiosInstance.put(`/templates/${id}`, template);
+      const response = await axiosInstance.put(`/templates/uploadEmailConfig/${id}`, template);
       
       if (response.data.template) {
         // Update local template with the saved version (including new logo URL)
@@ -236,7 +237,7 @@ function EmailBuilder() {
   // Add download function
   const handleDownload = async () => {
     try {
-      const response = await axiosInstance.get(`/templates/${id}/download`, {
+      const response = await axiosInstance.get(`/templates/renderAndDownloadTemplate/${id}/download`, {
         responseType: 'blob' // Important for handling the HTML file
       });
       

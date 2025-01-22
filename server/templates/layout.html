@@ -8,10 +8,16 @@
       :root {
         --title-color: black;
         --content-color: black;
+        --footer-color: #666;
         --text-align: left;
         --title-size: 24px;
         --content-size: 16px;
+        --footer-size: 12px;
+        --footer-alignment: center;
+        --title-alignment: left;
+        --content-alignment: left;
       }
+
       body {
         margin: 0;
         padding: 0;
@@ -20,17 +26,25 @@
         -ms-text-size-adjust: 100%;
         font-family: Arial, sans-serif;
       }
+
       #titleText {
         color: var(--title-color);
         font-size: var(--title-size);
         text-align: var(--title-alignment);
       }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
       .logo-image {
         width: 100%;
         max-width: 100px;
         height: auto;
       }
-      
+
       img {
         border: 0;
         height: auto;
@@ -74,13 +88,14 @@
         color: var(--content-color);
         font-size: var(--content-size);
         padding: 20px 0;
+        text-align: var(--content-alignment);
       }
 
       .footer {
-        text-align: center;
+        text-align: var(--footer-alignment);
+        color: var(--footer-color);
+        font-size: var(--footer-size);
         padding: 20px 0;
-        color: #666;
-        font-size: 12px;
         border-top: 1px solid #eee;
       }
 
@@ -94,30 +109,24 @@
   </head>
   <body
     style="
-    --title-color: {{titleColor}};
-    --content-color: {{contentColor}};
-    --footer-color: {{footerColor}};
-
-    --title-alignment: {{titleAlignment}};
-    --content-alignment: {{contentAlignment}};
-    --footer-alignment: {{footerAlignment}};
-
-    --title-size: {{titleFontSize}};
-    --content-size: {{contentFontSize}};
-    --footer-size: {{footerFontSize}};
-"
+      --title-color: {{titleColor}};
+      --content-color: {{contentColor}};
+      --footer-color: {{footerColor}};
+      --title-alignment: {{titleAlignment}};
+      --content-alignment: {{contentAlignment}};
+      --footer-alignment: {{footerAlignment}};
+      --title-size: {{titleFontSize}};
+      --content-size: {{contentFontSize}};
+      --footer-size: {{footerFontSize}};
+    "
   >
     <div class="email-wrapper">
       <div class="logo">
-        <img src="{{logoUrl}}" alt="Logo" class="logo-image" />
       </div>
       <div class="header">
         <h1 id="titleText">{{titleText}}</h1>
       </div>
 
-      <div class="image-container">
-        <img src="{{imageUrl}}" alt="Email Image" class="email-image" />
-      </div>
       <div class="content">{{contentText}}</div>
       <div class="footer">{{footerText}}</div>
     </div>

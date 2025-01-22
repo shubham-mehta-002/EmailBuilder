@@ -4,7 +4,7 @@ const auth = (req, res, next) => {
     try {
         // Get token from header
         const token = req.header('Authorization')?.replace('Bearer ', '');
-
+        console.log(req.originalUrl)
         if (!token) {
             return res.status(401).json({ message: 'No auth token found' });
         }
@@ -14,7 +14,6 @@ const auth = (req, res, next) => {
         
         // Add user info to request
         req.user = { id: decoded.userId };
-        
         next();
     } catch (error) {
         console.error('Auth error:', error);

@@ -25,30 +25,38 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Image upload endpoint
-app.post('/api/uploadImage', async (req, res) => {
-  try {
-    const fileStr = req.body.data;
-    const uploadResponse = await cloudinary.uploader.upload(fileStr, {
-      upload_preset: 'email_builder'
-    });
-    res.json({ imageUrl: uploadResponse.secure_url });
-  } catch (error) {
-    console.error('Error uploading image:', error);
-    res.status(500).json({ error: 'Image upload failed' });
-  }
-});
+// // Image upload endpoint
+// app.post('/api/uploadImage', async (req, res) => {
+//   try {
+//     const fileStr = req.body.data;
+//     const uploadResponse = await cloudinary.uploader.upload(fileStr, {
+//       upload_preset: 'email_builder'
+//     });
+//     res.json({ imageUrl: uploadResponse.secure_url });
+//   } catch (error) {
+//     console.error('Error uploading image:', error);
+//     res.status(500).json({ error: 'Image upload failed' });
+//   }
+// });
 
 // Routes
-const authRoutes = require('./routers/auth.route');
-const emailBuilderRoutes = require('./routers/emailBuilder.route');
+// const authRoutes = require('./routers/auth.route');
+// const emailBuilderRoutes = require('./routers/emailBuilder.route');
 
-app.use('/api/auth', authRoutes);
-app.use('/api/templates', emailBuilderRoutes);
-app.use('/api/templates', templateRoutes);
+const _authRoutes = require('./_routers/auth.router');
+const _templateRoutes = require('./_routers/template.router');
+const _emailBuilderRoutes = require('./_routers/emailBuilder.router');
+
+// app.use('/api/auth', authRoutes);
+// app.use('/api', emailBuilderRoutes);
+// app.use('/api/templates', templateRoutes);
+
+app.use("/api/auth", _authRoutes);
+app.use("/api/templates", _templateRoutes);
+app.use("/api/email-builder", _emailBuilderRoutes);
 
 // Serve static files from uploads directory
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const PORT = process.env.PORT || 5000;
 

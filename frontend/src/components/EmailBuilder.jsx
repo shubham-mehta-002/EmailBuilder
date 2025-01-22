@@ -386,7 +386,7 @@ function EmailBuilder() {
 
       {/* Right Sidebar */}
       {template && activeSection && (
-        <div className=" h-[40%] w-full md:w-80 border-t md:border-t-0 md:border-l border-gray-200 bg-white overflow-y-auto">
+        <div className=" h-[40%] sm:h-full w-full md:w-80 border-t md:border-t-0 md:border-l border-gray-200 bg-white overflow-y-auto">
           <div className="p-4">
             {/* Text Editor Section */}
             <div className="space-y-4">

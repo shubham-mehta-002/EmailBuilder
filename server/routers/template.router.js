@@ -11,7 +11,7 @@ const {
     getEmailLayout,
     uploadImage
 
-} = require('../_controllers/template.controller');
+} = require('../controllers/template.controller');
 
 // All routes are protected with auth middleware
 router.use(auth);

@@ -48,9 +48,9 @@ function Templates() {
         <h1 className="text-2xl font-bold text-gray-900">My Templates</h1>
         <button
           onClick={handleCreateTemplate}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
-          Create New Template
+          +
         </button>
       </div>
 
@@ -65,7 +65,7 @@ function Templates() {
           {templates.map((template) => (
             <div
               key={template._id}
-              className="bg-white overflow-hidden shadow rounded-lg"
+              className="bg-white overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow duration-300"
             >
               <div className="p-5">
                 <div className="flex items-center justify-between">
@@ -79,15 +79,9 @@ function Templates() {
                 <div className="mt-4 flex justify-end space-x-3">
                   <button
                     onClick={() => navigate(`/builder/${template._id}`)}
-                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded text-indigo-600 hover:text-indigo-700"
+                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded text-indigo-600 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     Edit
-                  </button>
-                  <button
-                    onClick={() => navigate(`/preview/${template._id}`)}
-                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded text-green-600 hover:text-green-700"
-                  >
-                    Preview
                   </button>
                 </div>
               </div>

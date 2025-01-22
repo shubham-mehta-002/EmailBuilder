@@ -268,7 +268,7 @@ function EmailBuilder() {
   console.log({template});
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex flex-col md:flex-row h-screen bg-gray-50">
       {/* Main Preview Area */}
       {template && (
         <div className="flex-1 overflow-auto">
@@ -281,13 +281,6 @@ function EmailBuilder() {
                 <ChevronLeftIcon className="w-5 h-5 mr-1" />
                 Back
               </button>
-              
-              <button
-                onClick={handleDownload}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
-              >
-                Download HTML
-              </button>
             </div>
             
             <h2 className="text-xl font-semibold mt-4">{template.templateName}</h2>
@@ -297,7 +290,6 @@ function EmailBuilder() {
               {/* Logo Section */}
               <div 
                 className={`cursor-pointer ${activeSection === 'logo' ? 'ring-2 ring-indigo-500' : ''}`}
-                // onClick={() => setActiveSection('logo')}
               >
                 <input
                   type="file"
@@ -338,7 +330,7 @@ function EmailBuilder() {
 
               {/* Content Section */}
               <div 
-                className={`mt-6 px-1 py-3  cursor-pointer ${activeSection === 'context' ? 'ring-2 ring-indigo-500' : ''}`}
+                className={`mt-6 px-1 py-3 cursor-pointer ${activeSection === 'context' ? 'ring-2 ring-indigo-500' : ''}`}
                 onClick={() => setActiveSection('context')}
               >
                 <div
@@ -356,7 +348,7 @@ function EmailBuilder() {
 
               {/* Footer Section */}
               <div 
-                className={`mt-8  px-1 py-3 border-t cursor-pointer ${activeSection === 'footer' ? 'ring-2 ring-indigo-500' : ''}`}
+                className={`mt-8 px-1 py-3 border-t cursor-pointer ${activeSection === 'footer' ? 'ring-2 ring-indigo-500' : ''}`}
                 onClick={() => setActiveSection('footer')}
               >
                 <div
@@ -375,7 +367,7 @@ function EmailBuilder() {
 
       {/* Right Sidebar */}
       {template && activeSection && (
-        <div className="w-80 border-l border-gray-200 bg-white overflow-y-auto">
+        <div className="w-full md:w-80 border-t md:border-t-0 md:border-l border-gray-200 bg-white overflow-y-auto">
           <div className="p-4">
             {/* Text Editor Section */}
             <div className="space-y-4">
@@ -446,7 +438,6 @@ function EmailBuilder() {
                   Shift + Enter will add a line break
                 </div>
               </div>
-
 
               {/* Alignment */}
               <div>
@@ -532,13 +523,20 @@ function EmailBuilder() {
                   ))}
                 </div>
               </div>
-              <div className="flex items-center">
-            <button 
-            onClick={handleSaveTemplate}
-            className="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
-              Save Template
-            </button>
-          </div>
+              <div className="flex items-center justify-between">
+                <button 
+                  onClick={handleSaveTemplate}
+                  className="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                  Save Template
+                </button>
+
+                <button
+                  onClick={handleDownload}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
+                >
+                  Download HTML
+                </button>
+              </div>
             </div>
           </div>
         </div>

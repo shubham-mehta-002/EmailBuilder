@@ -92,27 +92,13 @@ const getTemplateById = async (req, res) => {
     }
 };
 
-// Helper function to upload image to Cloudinary
-const uploadToCloudinary = async (base64Image) => {
+const uploadEmailConfig = async(req, res) => {
     try {
-        const result = await cloudinary.uploader.upload(base64Image, {
-            folder: 'email_builder'
-        });
-        return result.secure_url;
-    } catch (error) {
-        console.error('Cloudinary upload error:', error);
-        throw new Error('Failed to upload image to Cloudinary');
-    }
-};
-
-const updateTemplate = async (req, res) => {
-    try {
-        let logoUrl = req.body.logoUrl;
-        console.log({logoUrl});
-        // If logoUrl is a base64 string (new image), upload to Cloudinary
-        if (logoUrl && logoUrl.startsWith('data:image')) {
-            logoUrl = await uploadToCloudinary(logoUrl);
-            console.log({logoUrl});
+        let base64Image = req.body.logoUrl;
+        
+        let logoUrl = null;
+        if(base64Image) {
+            logoUrl = await uploadToCloudinary(base64Image);
         }
 
         const updateData = {
@@ -135,8 +121,8 @@ const updateTemplate = async (req, res) => {
                 textColor: req.body.footer?.textColor,
                 alignment: req.body.footer?.alignment
             },
-            imageUrl: req.body.imageUrl,
-            logoUrl // Use the Cloudinary URL if uploaded, or existing URL
+            imageUrl: req.body.imageUrl ? req.body.imageUrl : [],
+            logoUrl 
         };
 
         const template = await Template.findOneAndUpdate(
@@ -157,27 +143,51 @@ const updateTemplate = async (req, res) => {
         console.error('Error updating template:', error);
         res.status(500).json({ message: 'Error updating template' });
     }
-};
+}
 
-const deleteTemplate = async (req, res) => {
-    try {
-        const template = await Template.findOneAndDelete({
-            _id: req.params.id,
-            userId: req.user.id
+// Helper function to upload image to Cloudinary
+const uploadToCloudinary = async (imageBase64) => {
+    try{
+        const uploadResult = await cloudinary.uploader.upload(imageBase64, {
+            resource_type: 'image',
+            folder: 'email_builder'
         });
-
-        if (!template) {
-            return res.status(404).json({ message: 'Template not found' });
-        }
-
-        res.json({ message: 'Template deleted successfully' });
-    } catch (error) {
-        console.error('Error deleting template:', error);
-        res.status(500).json({ message: 'Error deleting template' });
+        return uploadResult.secure_url;
+    }catch(error){
+        console.error('Cloudinary upload error:', error);
+        throw new Error('Failed to upload image to Cloudinary');
     }
 };
+const getEmailLayout = async (req, res) => {
+    try{
+        let layout = await fs.readFile('../server/templates/layout.html', 'utf8');
+        res.setHeader('Content-Type', "text/html"); 
+        res.status(200).send(layout);
+    }catch(err){
+        console.log({err})
+    }    
+};
 
-const downloadTemplate = async (req, res) => {
+const uploadImage = async (req, res) => {
+    try {
+        let imageBase64 = req.body.logoUrl;
+        if (!imageBase64) {
+            return res.status(400).json({ success:false ,message: 'No image data provided' });
+        }
+        
+        const url = await uploadToCloudinary(imageBase64);
+      
+          return res.status(200).json({
+            message: 'Image uploaded successfully',
+            imageUrl: url
+          });
+    } catch (error) {
+        console.error('Cloudinary upload error:', error);
+        return res.status(500).json({ message: 'Image upload failed' });
+    }
+}
+const renderAndDownloadTemplate = async (req, res) => {
+    console.log('renderAndDownloadTemplate');
     try {
         const template = await Template.findOne({
             _id: req.params.id,
@@ -192,10 +202,14 @@ const downloadTemplate = async (req, res) => {
         const layoutPath = path.join(__dirname, '../templates/layout.html');
         let htmlContent = await fs.readFile(layoutPath, 'utf8');
 
+        // adding logo image if available
+        const logoHtml = template.logoUrl ? `<img src="${template.logoUrl}" alt="logo" class="logo-image"/>` : '';	
+        
         // Replace placeholders with template data
         htmlContent = htmlContent
+            .replace('{{templateName}}', template.templateName)
             // Logo
-            .replace('{{logoUrl}}', template.logoUrl || '')
+            .replace('{{logoUrl}}', logoHtml)
             
             // Title section
             .replace('{{titleText}}', template.title.value)
@@ -215,7 +229,6 @@ const downloadTemplate = async (req, res) => {
             .replace('{{footerFontSize}}', getFontSize(template.footer.fontSize))
             .replace('{{footerAlignment}}', template.footer.alignment)
 
-            .replace('{{templateName}}', template.templateName);
 
         // Set response headers
         res.setHeader('Content-Type', 'text/html');
@@ -227,9 +240,7 @@ const downloadTemplate = async (req, res) => {
         console.error('Error generating template:', error);
         res.status(500).json({ message: 'Error generating template' });
     }
-};
-
-// Helper function to convert fontSize values to actual CSS values
+}
 const getFontSize = (size) => {
     switch (size) {
         case 'sm': return '0.875rem';
@@ -243,7 +254,8 @@ module.exports = {
     getTemplatesByUser,
     createTemplate,
     getTemplateById,
-    updateTemplate,
-    deleteTemplate,
-    downloadTemplate
+    uploadEmailConfig,
+    renderAndDownloadTemplate,
+    getEmailLayout,
+    uploadImage
 }; 

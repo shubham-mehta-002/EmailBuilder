@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import instance from '../utils/axios';
+import instance from "../utils/axios";
+import toast from 'react-hot-toast';
 
 function Login() {
   const navigate = useNavigate();
@@ -33,26 +34,28 @@ function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e){
     e.preventDefault();
+    setErrors({});
 
     if (!validateForm()) return;
-
     setIsLoading(true);
     try {
-      
-      const response = await instance.post('/auth/login', formData);
+      const response = await instance.post('/auth/login', formData);   
       localStorage.setItem('token', response.data.token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
       navigate('/templates');
     } catch (error) {
+      console.log({error})
       setErrors({
         submit: error.response?.data?.message || 'Login failed'
       });
+      toast.error('Invalid credentials');
     } finally {
       setIsLoading(false);
     }
-  };
+  }
+
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-6 sm:px-8">

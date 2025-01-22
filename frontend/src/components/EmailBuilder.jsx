@@ -9,7 +9,8 @@ import {
   Bars3Icon,
   Bars3BottomRightIcon,
   LinkIcon,
-  ChevronLeftIcon
+  ChevronLeftIcon,
+  PencilIcon
 } from '@heroicons/react/24/outline' 
 import { toast } from 'react-hot-toast'
 // import { uploadImage} from '../utils/cloudinary'
@@ -29,6 +30,7 @@ function EmailBuilder() {
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(null);
   const fileInputRef = useRef(null);
+  const [isEditingTemplateName, setIsEditingTemplateName] = useState(false);
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -268,25 +270,42 @@ function EmailBuilder() {
   console.log({template});
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50">
+    <div className="flex flex-col md:flex-row h-screen bg-gray-50">
       {/* Main Preview Area */}
       {template && (
-        <div className="flex-1 overflow-auto p-4 lg:p-6">
-          <div className="max-w-4xl mx-auto">
+        <div className="flex-1 overflow-auto">
+          <div className="p-4">
             <div className="flex justify-between items-center">
               <button 
                 onClick={() => navigate(-1)}
-                className="flex items-center text-gray-600 hover:text-gray-900 text-sm lg:text-base"
+                className="flex items-center text-gray-600 hover:text-gray-900"
               >
-                <ChevronLeftIcon className="w-4 h-4 lg:w-5 lg:h-5 mr-1" />
+                <ChevronLeftIcon className="w-5 h-5 mr-1" />
                 Back
               </button>
             </div>
             
-            <h2 className="text-lg lg:text-xl font-semibold mt-3 lg:mt-4">{template.templateName}</h2>
+            <h2 className="text-xl font-semibold mt-4 flex justify-center items-center">
+              {isEditingTemplateName ? (
+                <input
+                  type='text'
+                  value={template.templateName}
+                  onChange={(e) => setTemplate(prev => ({ ...prev, templateName: e.target.value }))}
+                  onBlur={() => setIsEditingTemplateName(false)}
+                  className="border-b border-gray-200"
+                />
+              ) : (
+                <>
+                  {template.templateName}
+                  <button onClick={() => setIsEditingTemplateName(true)}>
+                    <PencilIcon className="w-5 h-5 inline ml-2 cursor-pointer" />
+                  </button>
+                </>
+              )}
+            </h2>
 
             {/* Email Canvas */}
-            <div className="bg-white mt-4 mx-auto max-w-3xl min-h-[500px] lg:min-h-[600px] shadow-md p-4 lg:p-8 overflow-x-hidden">
+            <div className="bg-white mt-4 mx-auto max-w-3xl min-h-[600px] shadow-md p-8">
               {/* Logo Section */}
               <div 
                 className={`cursor-pointer ${activeSection === 'logo' ? 'ring-2 ring-indigo-500' : ''}`}
@@ -300,12 +319,12 @@ function EmailBuilder() {
                 />
                 <button 
                   onClick={() => fileInputRef.current.click()}
-                  className="w-full py-2 lg:py-3 border-2 border-dashed border-gray-300 rounded-md text-gray-500 hover:text-gray-700 hover:border-gray-400"
+                  className="w-full py-3 border-2 border-dashed border-gray-300 rounded-md text-gray-500 hover:text-gray-700 hover:border-gray-400"
                 >
                   {logoPreview ? (
-                    <img src={logoPreview} alt="Logo Preview" className="h-[150px] lg:h-[200px] w-[150px] lg:w-[200px] mx-auto object-contain" />
+                    <img src={logoPreview} alt="Logo Preview" className="h-[200px] w-[200px] mx-auto object-contain" />
                   ) : template.logoUrl ? (
-                    <img src={template.logoUrl} alt="Logo" className="h-[150px] lg:h-[200px] w-[150px] lg:w-[200px] mx-auto object-contain" />
+                    <img src={template.logoUrl} alt="Logo" className="h-[200px] w-[200px] mx-auto object-contain" />
                   ) : (
                     'ADD LOGO'
                   )}
@@ -314,14 +333,14 @@ function EmailBuilder() {
 
               {/* Title Section */}
               <div 
-                className={`mt-6 lg:mt-8 px-1 py-2 lg:py-3 cursor-pointer ${activeSection === 'title' ? 'ring-2 ring-indigo-500' : ''}`}
+                className={`mt-8 px-1 py-3 cursor-pointer ${activeSection === 'title' ? 'ring-2 ring-indigo-500' : ''}`}
                 onClick={() => setActiveSection('title')}
               >
                 <h1 
-                  className="text-2xl lg:text-3xl font-bold mb-3 lg:mb-4"
+                  className="text-3xl font-bold mb-4"
                   style={{
                     color: template.title.textColor,
-                    fontSize: template.title.fontSize === 'sm' ? '1.25rem' : template.title.fontSize === 'md' ? '1.75rem' : '2.25rem',
+                    fontSize: template.title.fontSize === 'sm' ? '1.5rem' : template.title.fontSize === 'md' ? '2rem' : '2.5rem',
                     textAlign: template.title.alignment
                   }}
                   dangerouslySetInnerHTML={renderFormattedContent(template.title.value)}
@@ -330,7 +349,7 @@ function EmailBuilder() {
 
               {/* Content Section */}
               <div 
-                className={`mt-4 lg:mt-6 px-1 py-2 lg:py-3 cursor-pointer ${activeSection === 'context' ? 'ring-2 ring-indigo-500' : ''}`}
+                className={`mt-6 px-1 py-3 cursor-pointer ${activeSection === 'context' ? 'ring-2 ring-indigo-500' : ''}`}
                 onClick={() => setActiveSection('context')}
               >
                 <div
@@ -342,13 +361,13 @@ function EmailBuilder() {
                   dangerouslySetInnerHTML={renderFormattedContent(template.context.value)}
                 />
                 {template.imageUrl?.map((url, index) => (
-                  <img key={index} src={url} alt={`Content ${index + 1}`} className="my-3 lg:my-4 w-full" />
+                  <img key={index} src={url} alt={`Content ${index + 1}`} className="my-4 w-full" />
                 ))}
               </div>
 
               {/* Footer Section */}
               <div 
-                className={`mt-6 lg:mt-8 px-1 py-2 lg:py-3 border-t cursor-pointer ${activeSection === 'footer' ? 'ring-2 ring-indigo-500' : ''}`}
+                className={`mt-8 px-1 py-3 border-t cursor-pointer ${activeSection === 'footer' ? 'ring-2 ring-indigo-500' : ''}`}
                 onClick={() => setActiveSection('footer')}
               >
                 <div
@@ -367,50 +386,50 @@ function EmailBuilder() {
 
       {/* Right Sidebar */}
       {template && activeSection && (
-        <div className="w-full lg:w-96 border-t lg:border-t-0 lg:border-l border-gray-200 bg-white overflow-y-auto">
-          <div className="p-4 lg:p-6">
+        <div className=" h-[40%] w-full md:w-80 border-t md:border-t-0 md:border-l border-gray-200 bg-white overflow-y-auto">
+          <div className="p-4">
             {/* Text Editor Section */}
-            <div className="space-y-4 lg:space-y-6">
+            <div className="space-y-4">
               <div>
-                <h3 className="font-medium mb-2 lg:mb-3 text-sm lg:text-base">Text</h3>
+                <h3 className="font-medium mb-3">Text</h3>
                 
                 {/* Rich Text Editor Controls */}
-                <div className="flex space-x-2 mb-3">
+                <div className="flex space-x-1 mb-2">
                   <button 
                     className="p-2 hover:bg-gray-100 rounded"
                     onClick={() => applyTextFormat('bold')}
                   >
-                    <BoldIcon className="w-4 h-4 lg:w-5 lg:h-5" />
+                    <BoldIcon className="w-4 h-4" />
                   </button>
                   <button 
                     className="p-2 hover:bg-gray-100 rounded"
                     onClick={() => applyTextFormat('italic')}
                   >
-                    <ItalicIcon className="w-4 h-4 lg:w-5 lg:h-5" />
+                    <ItalicIcon className="w-4 h-4" />
                   </button>
                   <button 
                     className="p-2 hover:bg-gray-100 rounded"
                     onClick={() => applyTextFormat('underline')}
                   >
-                    <UnderlineIcon className="w-4 h-4 lg:w-5 lg:h-5" />
+                    <UnderlineIcon className="w-4 h-4" />
                   </button>
                   <button 
                     className="p-2 hover:bg-gray-100 rounded"
                     onClick={() => applyTextFormat('link')}
                   >
-                    <LinkIcon className="w-4 h-4 lg:w-5 lg:h-5" />
+                    <LinkIcon className="w-4 h-4" />
                   </button>
                 </div>
 
                 {/* Link Input Dialog */}
                 {showLinkInput && (
-                  <div className="mb-3">
+                  <div className="mb-2">
                     <input
                       type="url"
                       value={linkUrl}
                       onChange={(e) => setLinkUrl(e.target.value)}
                       placeholder="Press Enter to add link or Escape to cancel"
-                      className="w-full p-2 lg:p-3 border rounded text-sm"
+                      className="w-full p-2 border rounded text-sm"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           applyTextFormat('link');
@@ -424,24 +443,24 @@ function EmailBuilder() {
                 )}
 
                 {/* Text Input */}
-                <div className="text-xs lg:text-sm text-gray-500 mt-1 mb-2">
+                <div className="text-xs text-gray-500 mt-1">
                   Select the text to format
                 </div>
                 <textarea
                   ref={textareaRef}
-                  className="w-full border rounded-md p-3 min-h-[100px] lg:min-h-[120px] text-sm lg:text-base resize-y whitespace-pre-wrap break-words"
+                  className="w-full border rounded-md p-3 min-h-[100px] text-sm resize-y whitespace-pre-wrap break-words"
                   value={getActiveSectionData()?.value || ''}
                   onChange={handleTextChange}
                   placeholder={`Enter ${activeSection} text`}
                 />
-                <div className="text-xs lg:text-sm text-gray-500 mt-2">
+                <div className="text-xs text-gray-500 mt-1">
                   Shift + Enter will add a line break
                 </div>
               </div>
 
               {/* Alignment */}
               <div>
-                <h3 className="font-medium mb-2 text-sm lg:text-base">Alignment</h3>
+                <h3 className="font-medium mb-2 text-sm">Alignment</h3>
                 <div className="flex space-x-2">
                   {['left', 'center', 'right'].map((align) => (
                     <button
@@ -453,15 +472,15 @@ function EmailBuilder() {
                           alignment: align
                         }
                       }))}
-                      className={`flex-1 p-2 lg:p-3 border rounded ${
+                      className={`flex-1 p-2 border rounded ${
                         getActiveSectionData()?.alignment === align 
                           ? 'bg-gray-100' 
                           : ''
                       }`}
                     >
-                      {align === 'left' && <Bars3BottomLeftIcon className="w-4 h-4 lg:w-5 lg:h-5 mx-auto" />}
-                      {align === 'center' && <Bars3Icon className="w-4 h-4 lg:w-5 lg:h-5 mx-auto" />}
-                      {align === 'right' && <Bars3BottomRightIcon className="w-4 h-4 lg:w-5 lg:h-5 mx-auto" />}
+                      {align === 'left' && <Bars3BottomLeftIcon className="w-4 h-4 mx-auto" />}
+                      {align === 'center' && <Bars3Icon className="w-4 h-4 mx-auto" />}
+                      {align === 'right' && <Bars3BottomRightIcon className="w-4 h-4 mx-auto" />}
                     </button>
                   ))}
                 </div>
@@ -469,8 +488,8 @@ function EmailBuilder() {
 
               {/* Text Color */}
               <div>
-                <h3 className="font-medium mb-2 text-sm lg:text-base">Text color</h3>
-                <div className="flex space-x-3">
+                <h3 className="font-medium mb-2 text-sm">Text color</h3>
+                <div className="flex space-x-2">
                   {/* Fixed Color from Backend */}
                   <button
                     onClick={() => {
@@ -482,7 +501,7 @@ function EmailBuilder() {
                         }
                       }));
                     }}
-                    className="w-8 h-8 lg:w-10 lg:h-10 rounded-full border-2 border-gray-200 cursor-pointer hover:border-gray-300"
+                    className="w-8 h-8 rounded-full border-2 border-gray-200 cursor-pointer hover:border-gray-300"
                     style={{ backgroundColor: initialColor }}
                     title="Click to use original color"
                   />
@@ -492,7 +511,7 @@ function EmailBuilder() {
                     type="color"
                     value={variableColor}
                     onChange={handleColorChange}
-                    className="w-8 h-8 lg:w-10 lg:h-10 rounded-full cursor-pointer"
+                    className="w-8 h-8 rounded-full cursor-pointer"
                     title="Choose new color"
                   />
                 </div>
@@ -500,7 +519,7 @@ function EmailBuilder() {
 
               {/* Font Size */}
               <div>
-                <h3 className="font-medium mb-2 text-sm lg:text-base">Font size</h3>
+                <h3 className="font-medium mb-2 text-sm">Font size</h3>
                 <div className="flex flex-wrap gap-2">
                   {['SM', 'MD', 'LG'].map((size) => (
                     <button
@@ -512,7 +531,7 @@ function EmailBuilder() {
                           fontSize: size.toLowerCase()
                         }
                       }))}
-                      className={`px-3 py-1 lg:px-4 lg:py-2 text-sm lg:text-base border rounded ${
+                      className={`px-3 py-1 text-sm border rounded ${
                         getActiveSectionData()?.fontSize === size.toLowerCase() 
                           ? 'bg-gray-100 border-gray-400' 
                           : 'border-gray-300'
@@ -523,19 +542,16 @@ function EmailBuilder() {
                   ))}
                 </div>
               </div>
-
-              {/* Action Buttons */}
-              <div className="flex items-center justify-between pt-2">
+              <div className="flex items-center justify-between">
                 <button 
                   onClick={handleSaveTemplate}
-                  className="flex-1 mr-2 px-3 py-2 lg:px-4 lg:py-2 border border-transparent text-sm lg:text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
-                >
+                  className="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
                   Save Template
                 </button>
 
                 <button
                   onClick={handleDownload}
-                  className="flex-1 ml-2 px-3 py-2 lg:px-4 lg:py-2 border border-transparent text-sm lg:text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 transition-colors"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
                 >
                   Download HTML
                 </button>

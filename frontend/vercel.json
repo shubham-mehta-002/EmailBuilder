@@ -1,19 +1,10 @@
 {
     "version": 2,
-    "builds": [
-      {
-        "src": "src/App.jsx",
-        "use": "@vercel/webpack"
-      }
-    ],
     "rewrites": [
       {
         "source": "/:path*",
         "destination": "/index.html"
       }
-    ],
-    "env": {
-      "REACT_APP_API_URL": "https://your-api-url.com"
-    }
+    ]
   }
   
